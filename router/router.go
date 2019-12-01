@@ -9,7 +9,7 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	//middlewares.executeThrottle()
+	middleware.executeThrottle()
 
 	//middleware.executeThrottle(recoveryHandler)
 	//r := gin.New()
