@@ -5,11 +5,13 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/water25234/Golang-Gin-Framework/core/log"
 )
 
 var client *redis.Client
 
-func Init() {
+func init() {
+	//fmt.Println(1234521)
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
@@ -22,22 +24,10 @@ func Init() {
 	if err != nil {
 		fmt.Println(pong, err)
 	}
-
-	// ExampleClient()
-
-	// fmt.Println(client)
-
-	// fmt.Println(time.Second * 180)
-
-	// client.Set("keyJustin", "Justin Value", time.Second*180).Err()
-
-	// val, err := client.Get("keyJustin").Result()
-
-	// fmt.Println("key", val)
 }
 
 func SetRedis(key string, value string, num int) {
-
+	log.Info("set redis")
 	err := client.Set(key, value, time.Duration(num)*time.Second).Err()
 	if err != nil {
 		panic(err)

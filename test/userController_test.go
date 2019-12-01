@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"testing"
 
-	"../router"
 	"github.com/stretchr/testify/assert"
+	"github.com/water25234/Golang-Gin-Framework/router"
 )
 
 type User struct {
@@ -24,7 +24,7 @@ func TestIUserGetRouter(t *testing.T) {
 	router := router.SetupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodGet, "/user/"+user.UserId, nil)
+	req, _ := http.NewRequest(http.MethodGet, "api/v1/user/"+user.UserId, nil)
 
 	router.ServeHTTP(w, req)
 

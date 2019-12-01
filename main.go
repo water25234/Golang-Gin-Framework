@@ -5,6 +5,5 @@ import (
 )
 
 func main() {
-	router.SetupRouter()
 	router.StartServer()
 }

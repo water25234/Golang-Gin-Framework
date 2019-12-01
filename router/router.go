@@ -4,31 +4,31 @@ import (
 	"github.com/gin-gonic/gin"
 	apiv1auth "github.com/water25234/Golang-Gin-Framework/api/v1/auth"
 	apiv1user "github.com/water25234/Golang-Gin-Framework/api/v1/user"
+	"github.com/water25234/Golang-Gin-Framework/middleware"
 )
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	middleware.executeThrottle()
+	gin.New().Use(gin.Logger())
 
-	//middleware.executeThrottle(recoveryHandler)
-	//r := gin.New()
+	gin.New().Use(gin.Recovery())
 
-	//router = router.Group("api")
-	//r.Use(middleware.executeThrottle(recoveryHandler))
-
-	authRouting := router.Group("/auth")
+	gin.New().Group("api").Use(middleware.ExecuteThrottle())
 	{
-		authRouting.GET("", apiv1auth.GetAuth)
+		authRouting := router.Group("api/v1/auth")
+		{
+			authRouting.GET("", apiv1auth.GetAuth)
 
-		authRouting.DELETE("/:id", apiv1auth.DeleteAuth)
+			authRouting.DELETE("/:id", apiv1auth.DeleteAuth)
 
-		authRouting.POST("/:uid", apiv1auth.PostAuth)
-	}
+			authRouting.POST("/:uid", apiv1auth.PostAuth)
+		}
 
-	userRouting := router.Group("/user")
-	{
-		userRouting.GET("/:uid", apiv1user.GetUser)
+		userRouting := router.Group("api/v1/user")
+		{
+			userRouting.GET("/:uid", apiv1user.GetUser)
+		}
 	}
 
 	return router

@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"testing"
 
-	"../router"
 	"github.com/stretchr/testify/assert"
+	"github.com/water25234/Golang-Gin-Framework/router"
 )
 
 type Auth struct {
@@ -20,7 +20,7 @@ func TestGetAuthRouter(t *testing.T) {
 	router := router.SetupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodGet, "/auth", nil)
+	req, _ := http.NewRequest(http.MethodGet, "api/v1/auth", nil)
 
 	router.ServeHTTP(w, req)
 
@@ -33,7 +33,7 @@ func TestAuthDeleteAuthRouter(t *testing.T) {
 	router := router.SetupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodDelete, "/auth/"+id, nil)
+	req, _ := http.NewRequest(http.MethodDelete, "api/v1/auth/"+id, nil)
 
 	router.ServeHTTP(w, req)
 
@@ -49,7 +49,7 @@ func TestAuthPostAuthRouter(t *testing.T) {
 	router := router.SetupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodPost, "/auth/"+auth.UserID, nil)
+	req, _ := http.NewRequest(http.MethodPost, "api/v1/auth/"+auth.UserID, nil)
 
 	router.ServeHTTP(w, req)
 
