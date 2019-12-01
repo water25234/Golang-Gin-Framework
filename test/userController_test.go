@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -19,7 +20,7 @@ func TestIUserGetRouter(t *testing.T) {
 	user := User{
 		UserId: "123",
 	}
-	expectedBody, _ := json.Marshal(user)
+	//expectedBody, _ := json.Marshal(user)
 	router := router.SetupRouter()
 
 	w := httptest.NewRecorder()
@@ -33,5 +34,28 @@ func TestIUserGetRouter(t *testing.T) {
 	input = re.ReplaceAllString(input, "")
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, string(expectedBody), input)
+	assert.Equal(t, GetSuccessResponse(user), input)
+}
+
+func GetSuccessResponse(data User) string {
+
+	type Response struct {
+		Data     User              `json:"data"`
+		Metadata map[string]string `json:"metadata"`
+	}
+
+	rsponse := Response{
+		Metadata: map[string]string{
+			"status": "0000",
+			"desc":   "success",
+		},
+		Data: data,
+	}
+	b, err := json.Marshal(rsponse)
+
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	return string(b)
 }
