@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -19,15 +19,17 @@ func main() {
 	client = redisClient
 
 	pong, err := client.Ping().Result()
-	fmt.Println(pong, err)
-
-	fmt.Println(client)
+	if err != nil {
+		fmt.Println(pong, err)
+	}
 
 	ExampleClient()
 
-	fmt.Println(time.Second * 180)
+	// fmt.Println(client)
 
-	client.Set("keyJustin", "Justin Value", time.Second*180).Err()
+	// fmt.Println(time.Second * 180)
+
+	// client.Set("keyJustin", "Justin Value", time.Second*180).Err()
 
 	// val, err := client.Get("keyJustin").Result()
 
@@ -40,6 +42,14 @@ func SetRedis(key string, value string, num int64) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func GetRedis(key string) string {
+	val, err := client.Get(key).Result()
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 
 func ExampleClient() {

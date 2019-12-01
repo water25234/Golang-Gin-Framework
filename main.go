@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	router := router.SetupRouter()
-	router.Run(":3000")
+	router.SetupRouter()
+	router.StartServer()
 }
