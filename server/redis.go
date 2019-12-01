@@ -9,7 +9,7 @@ import (
 
 var client *redis.Client
 
-func main() {
+func Init() {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
@@ -23,7 +23,7 @@ func main() {
 		fmt.Println(pong, err)
 	}
 
-	ExampleClient()
+	// ExampleClient()
 
 	// fmt.Println(client)
 
@@ -36,7 +36,7 @@ func main() {
 	// fmt.Println("key", val)
 }
 
-func SetRedis(key string, value string, num int64) {
+func SetRedis(key string, value string, num int) {
 
 	err := client.Set(key, value, time.Duration(num)*time.Second).Err()
 	if err != nil {

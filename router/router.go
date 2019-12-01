@@ -1,13 +1,21 @@
 package router
 
 import (
-	apiv1auth "../api/v1/auth"
-	apiv1user "../api/v1/user"
 	"github.com/gin-gonic/gin"
+	apiv1auth "github.com/water25234/Golang-Gin-Framework/api/v1/auth"
+	apiv1user "github.com/water25234/Golang-Gin-Framework/api/v1/user"
 )
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
+
+	//middlewares.executeThrottle()
+
+	//middleware.executeThrottle(recoveryHandler)
+	//r := gin.New()
+
+	//router = router.Group("api")
+	//r.Use(middleware.executeThrottle(recoveryHandler))
 
 	authRouting := router.Group("/auth")
 	{

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./router"
+	"github.com/water25234/Golang-Gin-Framework/router"
 )
 
 func main() {

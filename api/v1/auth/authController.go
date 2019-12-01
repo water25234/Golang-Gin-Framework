@@ -3,7 +3,7 @@ package apiv1auth
 import (
 	"net/http"
 
-	api ".."
+	api "github.com/water25234/Golang-Gin-Framework/api/v1"
 
 	"github.com/gin-gonic/gin"
 )
