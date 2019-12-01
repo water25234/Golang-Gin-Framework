@@ -10,13 +10,10 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	gin.New().Use(gin.Logger())
-
-	gin.New().Use(gin.Recovery())
-
-	gin.New().Group("api").Use(middleware.ExecuteThrottle())
+	v1 := router.Group("/api/v1")
 	{
-		authRouting := router.Group("api/v1/auth")
+		v1.Use(middleware.ExecuteThrottle())
+		authRouting := v1.Group("/auth")
 		{
 			authRouting.GET("", apiv1auth.GetAuth)
 
@@ -25,7 +22,7 @@ func SetupRouter() *gin.Engine {
 			authRouting.POST("/:uid", apiv1auth.PostAuth)
 		}
 
-		userRouting := router.Group("api/v1/user")
+		userRouting := v1.Group("/user")
 		{
 			userRouting.GET("/:uid", apiv1user.GetUser)
 		}
