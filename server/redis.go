@@ -6,15 +6,15 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/water25234/Golang-Gin-Framework/core/log"
+	core "github.com/water25234/Golang-Gin-Framework/core/server"
 )
 
 var client *redis.Client
 
-func init() {
+func InitRedis() {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
+		Addr: core.GetAppConfig().RedisHost + ":" + core.GetAppConfig().RedisPort,
+		DB:   core.GetAppConfig().RedisDB,
 	})
 
 	client = redisClient
