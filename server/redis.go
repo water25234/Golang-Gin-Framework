@@ -11,11 +11,10 @@ import (
 var client *redis.Client
 
 func init() {
-	//fmt.Println(1234521)
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "",
+		DB:       0,
 	})
 
 	client = redisClient
@@ -42,25 +41,10 @@ func GetRedis(key string) string {
 	return val
 }
 
-func ExampleClient() {
-
-	err := client.Set("key11", "value22", 0).Err()
+func GetKeys(key string) []string {
+	val, err := client.Keys(key).Result()
 	if err != nil {
 		panic(err)
 	}
-
-	val, err := client.Get("key11").Result()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("key11", val)
-
-	val2, err := client.Get("key2").Result()
-	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
-	} else if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("key2", val2)
-	}
+	return val
 }

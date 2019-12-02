@@ -1,34 +1,59 @@
 package middleware
 
 import (
-	"fmt"
+	"encoding/json"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/water25234/Golang-Gin-Framework/core/log"
+	"github.com/water25234/Golang-Gin-Framework/api/v1"
 	core "github.com/water25234/Golang-Gin-Framework/core/server"
 	"github.com/water25234/Golang-Gin-Framework/server"
 )
 
+var maxAttempts int
+var decayMinutes int
+
+type ThrottleDetail struct {
+	Time      string
+	IpAddress string
+	UrlPath   string
+}
+
 func init() {
-	fmt.Println(1234)
+	maxAttempts = 10
+	decayMinutes = 1
 }
 
 func ExecuteThrottle() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		fmt.Println(555)
 
-		log.Info("Execute Throttle")
-		//maxAttempts := 60
-		decayMinutes := 1
+		keysPattern := core.GetServerConfig().IpAddress + ":*"
+		keysArray := server.GetKeys(keysPattern)
+		keysLen := len(keysArray)
 
+		if keysLen > maxAttempts {
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, api.GetErrorResponse(nil, "Too many attempts, please slow down the request."))
+			return
+		}
 		time := time.Now().UTC().Format("2006-01-02 03:04:05")
 		key := core.GetServerConfig().IpAddress + ":" + time
-		value := time
 		decaysecond := decayMinutes * 60
 
-		server.SetRedis(key, value, decaysecond)
+		ThrottleDetail := ThrottleDetail{
+			Time:      time,
+			IpAddress: core.GetServerConfig().IpAddress,
+			UrlPath:   c.Request.URL.Path,
+		}
 
+		json, err := json.Marshal(ThrottleDetail)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, api.GetErrorResponse(nil, "json fail."))
+			return
+		}
+		value := string(json)
+
+		server.SetRedis(key, value, decaysecond)
 	}
 }

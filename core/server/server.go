@@ -1,11 +1,14 @@
 package coreserver
 
-import "net"
+import (
+	"net"
+)
 
 var serverConfig *ServerConfig
 
 type ServerConfig struct {
 	IpAddress string
+	// UrlPath   string
 }
 
 func SetServerGonfig() {
