@@ -20,5 +20,14 @@ func DeleteAuth(ctx *gin.Context) {
 func PostAuth(ctx *gin.Context) {
 	uid := ctx.Param("uid")
 
-	ctx.JSON(http.StatusOK, api.GetSuccessResponse(gin.H{"userId": uid}))
+	ctx.JSON(http.StatusOK, api.GetSuccessResponse(gin.H{
+		"ThrottleCount": ctx.MustGet("ThrottleCount"),
+		"userId":        uid,
+	}))
+}
+
+func GetThrottle(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "index.tmpl", api.GetSuccessResponse(gin.H{
+		"ThrottleCount": ctx.MustGet("ThrottleCount"),
+	}))
 }

@@ -9,6 +9,7 @@ import (
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
+	router.LoadHTMLGlob("templates/*")
 
 	v1 := router.Group("/api/v1")
 	{
@@ -16,6 +17,8 @@ func SetupRouter() *gin.Engine {
 		authRouting := v1.Group("/auth")
 		{
 			authRouting.GET("", apiv1auth.GetAuth)
+
+			authRouting.GET("/throttle", apiv1auth.GetThrottle)
 
 			authRouting.DELETE("/:id", apiv1auth.DeleteAuth)
 

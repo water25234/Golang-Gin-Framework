@@ -8,8 +8,9 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/water25234/Golang-Gin-Framework/router"
+	apiv1user "github.com/water25234/Golang-Gin-Framework/api/v1/user"
 )
 
 type User struct {
@@ -20,8 +21,9 @@ func TestIUserGetRouter(t *testing.T) {
 	user := User{
 		UserId: "123",
 	}
-	//expectedBody, _ := json.Marshal(user)
-	router := router.SetupRouter()
+
+	router := gin.Default()
+	router.GET("/api/v1/user/:uid", apiv1user.GetUser)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "api/v1/user/"+user.UserId, nil)

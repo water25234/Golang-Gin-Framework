@@ -8,16 +8,19 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/water25234/Golang-Gin-Framework/router"
+	apiv1auth "github.com/water25234/Golang-Gin-Framework/api/v1/auth"
 )
 
 type Auth struct {
-	UserID string `json:"userId"`
+	ThrottleCount int
+	UserID        string `json:"userId"`
 }
 
 func TestGetAuthRouter(t *testing.T) {
-	router := router.SetupRouter()
+	router := gin.Default()
+	router.GET("/api/v1/auth", apiv1auth.GetAuth)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "api/v1/auth", nil)
@@ -30,7 +33,9 @@ func TestGetAuthRouter(t *testing.T) {
 
 func TestAuthDeleteAuthRouter(t *testing.T) {
 	id := "123"
-	router := router.SetupRouter()
+
+	router := gin.Default()
+	router.DELETE("/api/v1/auth/:id", apiv1auth.DeleteAuth)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodDelete, "api/v1/auth/"+id, nil)
@@ -43,15 +48,24 @@ func TestAuthDeleteAuthRouter(t *testing.T) {
 
 func TestAuthPostAuthRouter(t *testing.T) {
 	auth := Auth{
-		UserID: "123",
+		ThrottleCount: 1,
+		UserID:        "123",
 	}
-	// expectedBody, _ := json.Marshal(Auth)
-	router := router.SetupRouter()
+
+	resp := httptest.NewRecorder()
+	gin.SetMode(gin.TestMode)
+	c, router := gin.CreateTestContext(resp)
+
+	router.Use(func(c *gin.Context) {
+		c.Set("ThrottleCount", 1)
+	})
+
+	router.POST("/api/v1/auth/:uid", apiv1auth.PostAuth)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodPost, "api/v1/auth/"+auth.UserID, nil)
+	c.Request, _ = http.NewRequest(http.MethodPost, "api/v1/auth/"+auth.UserID, nil)
 
-	router.ServeHTTP(w, req)
+	router.ServeHTTP(w, c.Request)
 
 	input := string(w.Body.String())
 
@@ -59,10 +73,10 @@ func TestAuthPostAuthRouter(t *testing.T) {
 	input = re.ReplaceAllString(input, "")
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, GetSuccessResponse_1(auth), input)
+	assert.Equal(t, GetSuccessResponse1(auth), input)
 }
 
-func GetSuccessResponse_1(auth Auth) string {
+func GetSuccessResponse1(auth Auth) string {
 
 	type Response struct {
 		Data     Auth              `json:"data"`

@@ -31,10 +31,15 @@ func ExecuteThrottle() gin.HandlerFunc {
 
 		keysPattern := core.GetServerConfig().IpAddress + ":*"
 		keysArray := server.GetKeys(keysPattern)
-		keysLen := len(keysArray)
+		keysLen := len(keysArray) + 1
 
 		if keysLen > maxAttempts {
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, api.GetErrorResponse(nil, "Too many attempts, please slow down the request."))
+			ThrottleCount := gin.H{
+				"ThrottleCount": keysLen,
+			}
+			//c.AbortWithStatusJSON(http.StatusTooManyRequests, api.GetErrorResponse(ThrottleCount, "Too many attempts, please slow down the request."))
+			c.HTML(http.StatusOK, "index.tmpl", api.GetErrorResponse(ThrottleCount, "Too many attempts, please slow down the request."))
+			c.Abort()
 			return
 		}
 		time := time.Now().UTC().Format("2006-01-02 03:04:05")
@@ -55,5 +60,6 @@ func ExecuteThrottle() gin.HandlerFunc {
 		value := string(json)
 
 		server.SetRedis(key, value, decaysecond)
+		c.Set("ThrottleCount", keysLen)
 	}
 }
