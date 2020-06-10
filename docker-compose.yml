@@ -1,13 +1,24 @@
-web:
-    build: .
-    working_dir: /src/github.com/water25234/Golang-Gin-Framework
-    ports:
-     - "8000:8000"
-    volumes:
-     - .:/src/github.com/water25234/Golang-Gin-Framework
-    links:
-     - db
-db:
-    image: redis
-    ports:
-     - "6379:6379"
+version: '3'
+
+networks:
+    backend:   
+
+services:
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+        restart: unless-stopped
+        networks:
+            - backend
+        depends_on: 
+            - redis
+
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - backend
