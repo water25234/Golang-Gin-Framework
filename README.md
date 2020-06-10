@@ -1,13 +1,11 @@
 # Golang-Gin-Framework
 
 ## Prerequisite
-- GO v1.13
+- GO v1.12
 - Redis
 
 ## Build the project
-- redis-server
-- cd /Golang-Gin-Framework 
-- go run main.go
+- docker-compose up -d
 
 ## test url
 - localhost:8080/api/v1/auth/throttle
