@@ -1,7 +1,8 @@
 version: '3'
 
 networks:
-    backend:   
+    backend:
+      driver: bridge
 
 services:
     web:
