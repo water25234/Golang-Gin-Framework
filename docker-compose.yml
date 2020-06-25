@@ -1,8 +1,8 @@
-version: '3'
+version: '3.7'
 
 networks:
     backend:
-      driver: bridge
+        driver: bridge
 
 services:
     web:
@@ -10,8 +10,10 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "8000:8000"
+            - "8080:8080"
         restart: unless-stopped
+        expose:
+            - 8080
         networks:
             - backend
         depends_on: 
